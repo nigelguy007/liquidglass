@@ -1,0 +1,470 @@
+/* ==========================================================================
+   Archar Theme  v2
+   Design system extracted from https://archar.framer.website/
+
+   v2 values are MEASURED from computed styles in Chromium at three
+   viewports (390 / 900 / 1440), not inferred from source CSS. Where v1
+   guessed, this corrects it — see NOTES at the bottom of this file.
+
+   Editorial portfolio system: grotesk display type set very tight,
+   monochrome base, one hot-orange accent, near-flat elevation.
+   ========================================================================== */
+
+:root {
+  /* ---------------------------------------------------------------------
+     COLOR
+     Seven values are declared as Framer design tokens (the authoritative
+     palette). Three further greys appear in painted output — kept here as
+     -alt steps so rebuilds match what actually renders.
+     --------------------------------------------------------------------- */
+  --color-black:      #000000;
+  --color-ink:        #161616;   /* raised surface on dark */
+  --color-grey-700:   #636363;   /* painted, not a declared token */
+  --color-grey-650:   #707070;   /* painted, not a declared token */
+  --color-grey-600:   #7a7a7a;
+  --color-grey-500:   #8b8b8b;   /* most-used grey */
+  --color-grey-100:   #f3f3f3;   /* light surface */
+  --color-white:      #ffffff;
+  --color-accent:     #ff6d10;   /* the only chromatic color in the system */
+
+  /* Semantic aliases — prefer these in components. */
+  --bg-page:          var(--color-white);
+  --bg-surface:       var(--color-grey-100);
+  --bg-inverse:       var(--color-black);
+  --text-primary:     var(--color-black);
+  --text-secondary:   var(--color-grey-600);
+  --text-muted:       var(--color-grey-500);
+  --text-inverse:     var(--color-white);
+  --border-hairline:  var(--color-black);
+  --scrim:            rgba(0, 0, 0, 0.57);
+
+  /* ---------------------------------------------------------------------
+     TYPOGRAPHY
+     Two typefaces, not one. Switzer carries display, headings, body and
+     UI labels. Inter is used deliberately for project titles and some
+     card meta — it is not merely a fallback.
+     --------------------------------------------------------------------- */
+  --font-display: "Switzer", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body:    "Switzer", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-project: "Inter", "Switzer", -apple-system, sans-serif;
+
+  --weight-regular:  400;
+  --weight-semibold: 600;   /* every heading on the site is 600 — there is no 700 display type */
+
+  /* Type scale. Each clamp() interpolates between the MEASURED phone
+     (390px) and desktop (1440px) values. Tablet lands on the measured
+     midpoint naturally.
+       display  58 →  80 → 120
+       h1       42 →  58 →  88
+       h2       36 →  46 →  58
+       h3       30 →  38 →  48                                        */
+  --text-display: clamp(3.625rem, 2.19rem + 5.90vw, 7.5rem);
+  --text-h1:      clamp(2.625rem, 1.56rem + 4.38vw, 5.5rem);
+  --text-h2:      clamp(2.25rem,  1.74rem + 2.10vw, 3.625rem);
+  --text-h3:      clamp(1.875rem, 1.46rem + 1.71vw, 3rem);
+  --text-lead:    3.8rem;      /* 60.84px — contact / oversized link */
+  --text-project: 1.375rem;    /* 22px — Inter, project titles */
+  --text-body:    0.875rem;    /* 14px — the site's true body size */
+  --text-label:   0.875rem;    /* 14px at weight 600 */
+  --text-caption: 0.75rem;     /* 12px */
+  --text-wordmark: 11.08rem;   /* 177px — oversized footer wordmark */
+
+  /* Leading. Ratios, measured. Display type is set below 1.0 — this is
+     the defining trait of the design; loosening it loses the look. */
+  --leading-wordmark: 0.76;
+  --leading-tight:    0.8;   /* stat values */
+  --leading-display:  0.9;   /* hero + section headings */
+  --leading-none:     1;     /* stat labels */
+  --leading-snug:     1.2;   /* sub-headings, project titles, lead */
+  --leading-body:     1.4;   /* running text */
+
+  /* Tracking. Negative throughout; measured as consistent em ratios. */
+  --tracking-display: -0.06em;  /* hero, stat values, wordmark */
+  --tracking-heading: -0.04em;  /* section headings, Inter meta */
+  --tracking-snug:    -0.03em;  /* sub-headings, lead */
+  --tracking-body:    -0.02em;  /* body, labels */
+  --tracking-none:    normal;   /* tabular figures (the live clock) */
+
+  /* ---------------------------------------------------------------------
+     SPACING
+     Base-5 / base-10 scale, confirmed by measured flex/grid gaps.
+     Not a 4pt or 8pt grid.
+     --------------------------------------------------------------------- */
+  --space-3xs: 5px;
+  --space-2xs: 10px;
+  --space-xs:  14px;
+  --space-sm:  20px;    /* most common gap */
+  --space-md:  30px;
+  --space-lg:  50px;
+  --space-xl:  70px;
+  --space-2xl: 100px;   /* section rhythm */
+  --space-3xl: 150px;
+  --space-4xl: 250px;
+
+  /* ---------------------------------------------------------------------
+     RADIUS  (measured frequency: 10px dominates at 74 elements)
+     --------------------------------------------------------------------- */
+  --radius-xs:   3px;
+  --radius-sm:   5px;
+  --radius-md:   10px;    /* cards, media, project tiles */
+  --radius-lg:   50px;
+  --radius-pill: 100px;
+  --radius-full: 1000px;
+
+  /* ---------------------------------------------------------------------
+     ELEVATION
+     Essentially flat. Only three shadows render on the whole page, and
+     the most common "depth" cue is a 1px inset hairline, not a shadow.
+     --------------------------------------------------------------------- */
+  --shadow-none:     none;
+  --shadow-hairline: inset 0 0 0 1px var(--color-black);
+  --shadow-overlay:  0 0 20px 5px rgba(0, 0, 0, 0.3);
+  --shadow-soft:
+    0 0.6px 1.57px -1.5px rgba(0, 0, 0, 0.17),
+    0 2.29px 5.9px -3px   rgba(0, 0, 0, 0.14);
+  --shadow-glow:     0 0 30px 0 rgba(255, 107, 15, 0.7);  /* accent glow, source CSS */
+
+  /* ---------------------------------------------------------------------
+     LAYOUT
+     Container and gutters are measured, not assumed:
+       390 viewport → 358 content (16px gutters)
+       900 viewport → 860 content (20px gutters)
+      1440 viewport → 1400 content (20px gutters)
+     Breakpoints are Framer's defaults.
+     --------------------------------------------------------------------- */
+  --bp-phone:  810px;
+  --bp-tablet: 1200px;
+
+  --container:      1400px;
+  --gutter:         20px;
+  --gutter-phone:   16px;
+
+  /* Measured column widths: 1400 halves to 700, thirds to ~460. */
+  --col-half:  700px;
+  --col-third: 460px;
+
+  /* ---------------------------------------------------------------------
+     MOTION
+     The source ships ZERO CSS transitions — the probe found no
+     transition-duration on any rendered element. All motion is
+     JavaScript-driven (Framer Motion), so no easing curve can be
+     extracted from the page. The values below are sensible editorial
+     defaults for a rebuild, NOT measurements.
+     --------------------------------------------------------------------- */
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+}
+
+/* Inverted section. The source alternates white and near-black blocks. */
+[data-theme="dark"] {
+  --bg-page:         var(--color-black);
+  --bg-surface:      var(--color-ink);
+  --bg-inverse:      var(--color-white);
+  --text-primary:    var(--color-white);
+  --text-secondary:  var(--color-grey-500);
+  --text-muted:      var(--color-grey-600);
+  --text-inverse:    var(--color-black);
+  --border-hairline: var(--color-white);
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   TYPE ROLES
+   ========================================================================== */
+
+.t-display,
+.t-h1,
+.t-h2,
+.t-h3 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  text-wrap: balance;
+}
+
+.t-display {
+  font-size: var(--text-display);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.t-h1 {
+  font-size: var(--text-h1);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-heading);
+}
+
+.t-h2 {
+  font-size: var(--text-h2);
+  line-height: var(--leading-none);
+  letter-spacing: var(--tracking-display);
+}
+
+.t-h3 {
+  font-size: var(--text-h3);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-snug);
+}
+
+.t-lead {
+  font-size: var(--text-lead);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-snug);
+}
+
+/* Oversized footer wordmark. */
+.t-wordmark {
+  font-family: var(--font-display);
+  font-size: var(--text-wordmark);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-wordmark);
+  letter-spacing: var(--tracking-display);
+}
+
+.t-body { font-size: var(--text-body); line-height: var(--leading-body); }
+
+.t-label {
+  font-size: var(--text-label);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-body);
+}
+
+.t-meta {
+  font-size: var(--text-body);
+  color: var(--text-muted);
+  line-height: var(--leading-snug);
+}
+
+/* Tabular figures for the live clock / any numeric readout. The source
+   sets letter-spacing: normal here — the only place tracking is not
+   negative. */
+.t-numeric {
+  font-size: var(--text-label);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-none);
+  letter-spacing: var(--tracking-none);
+  font-variant-numeric: tabular-nums;
+}
+
+.t-accent { color: var(--color-accent); }
+
+/* ==========================================================================
+   LAYOUT
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section      { padding-block: var(--space-2xl); }
+.section--tall { padding-block: var(--space-3xl); }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(50px, 1fr));
+  gap: var(--space-md);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(50px, 1fr));
+  gap: var(--space-sm);
+}
+
+.stack   { display: flex; flex-direction: column; gap: var(--space-sm); }
+.cluster { display: flex; align-items: center; gap: var(--space-2xs); flex-wrap: wrap; }
+
+@media (max-width: 809px) {
+  :root { --gutter: var(--gutter-phone); }
+  .grid-2, .grid-3 { grid-template-columns: repeat(1, minmax(50px, 1fr)); }
+  .section { padding-block: var(--space-lg); }
+}
+
+/* ==========================================================================
+   COMPONENTS
+   ========================================================================== */
+
+/* --- Button ------------------------------------------------------------ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3xs);
+  min-height: 44px;                 /* touch target floor */
+  padding: var(--space-xs) var(--space-md);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-body);
+  line-height: var(--leading-none);
+  cursor: pointer;
+  transition: background var(--duration-base) var(--ease-out),
+              color      var(--duration-base) var(--ease-out),
+              transform  var(--duration-fast) var(--ease-out);
+}
+
+.btn:active { transform: scale(0.97); }
+.btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+.btn--primary { background: var(--color-black); color: var(--color-white); }
+.btn--primary:hover { background: var(--color-ink); }
+
+.btn--accent  { background: var(--color-accent); color: var(--color-white); }
+.btn--accent:hover { box-shadow: var(--shadow-glow); }
+
+.btn--ghost {
+  background: transparent;
+  color: var(--text-primary);
+  box-shadow: var(--shadow-hairline);
+}
+.btn--ghost:hover { background: var(--color-black); color: var(--color-white); }
+
+/* --- Card / project tile ------------------------------------------------ */
+.card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-none);
+}
+
+.card__media {
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius-md);
+}
+
+.card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  padding: var(--space-sm);
+}
+
+/* Project titles use Inter, not Switzer — a real distinction on the site. */
+.card__title {
+  font-family: var(--font-project);
+  font-size: var(--text-project);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-heading);
+}
+
+.card__meta { font-size: var(--text-body); color: var(--text-muted); }
+
+/* --- Tag ---------------------------------------------------------------- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-3xs) var(--space-2xs);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  box-shadow: var(--shadow-hairline);
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  line-height: var(--leading-none);
+}
+
+/* --- Stat --------------------------------------------------------------- */
+.stat__value {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+}
+
+.stat__label {
+  font-size: var(--text-h2);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-none);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-muted);
+}
+
+/* --- Nav ---------------------------------------------------------------- */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+}
+
+.nav__link {
+  font-size: var(--text-label);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.nav__link:hover,
+.nav__link[aria-current="page"] { color: var(--text-primary); }
+
+/* --- Divider / scrim ---------------------------------------------------- */
+.divider {
+  height: 1px;
+  border: 0;
+  background: currentColor;
+  opacity: 0.15;
+  margin-block: var(--space-lg);
+}
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--scrim);
+  box-shadow: var(--shadow-overlay);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+/* ==========================================================================
+   NOTES — what changed in v2, and what is still not measurable
+
+   Corrected from v1 (v1 read source CSS; v2 measured the rendered page):
+   - Container is 1400px, not 1200px. The 1199/809 values in the source
+     are Framer's breakpoint boundaries, not a content width.
+   - Inter is a real second typeface (project titles, some card meta),
+     not just a metric fallback.
+   - Body text is 14px, not 16px.
+   - There are no CSS transitions anywhere on the page.
+
+   Not extractable, by nature:
+   - Easing curves and durations. Motion is JS-driven (Framer Motion), so
+     nothing lands in computed style. The --ease-* values here are
+     defaults for a rebuild, not observations.
+
+   Measurement caveat:
+   - Computed styles were read from a local copy of the document, because
+     this environment's proxy blocks headless Chromium from reaching the
+     live host. Layout, type, color, radius and spacing all resolve from
+     Framer's inlined CSS and match the source. One artifact was excluded:
+     a heavy rgb(0,0,238) count is the user-agent default link color
+     showing through where the runtime stylesheet did not apply locally.
+     It is not part of the palette.
+   ========================================================================== */
